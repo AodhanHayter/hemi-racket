@@ -1,12 +1,15 @@
-#lang racket
+#lang racket/base
 
 (require racket/match)
+(require racket/string)
 (require "color.rkt")
 
 (provide colorize)
 
 (define (colorize color-symbol str)
-  (string-join `[,esc ,(get-color color-symbol) ,mark-end ,str ,esc ,mark-end] ""))
+  (string-join `[,(get-color color-symbol) ,mark-end ,str] ""
+               #:before-first esc
+               #:after-last (string-append esc mark-end)))
 
 (define (get-color color-symbol)
   (match color-symbol
